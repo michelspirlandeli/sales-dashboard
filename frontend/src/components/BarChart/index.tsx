@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { SaleSuccess } from 'types/sale';
 import { round } from 'utils/format';
-import { BASE_URL } from 'utils/requests';
+import api from 'utils/requests';
 
 type SeriesData = {
   name: string;
@@ -11,57 +10,33 @@ type SeriesData = {
 };
 
 type CharData = {
-  labels: {
-    categories: string[];
-  };
+  labels: { categories: string[] };
   series: SeriesData[];
 };
 
 const BarChart = () => {
   const [chartData, setChartData] = useState<CharData>({
-    labels: {
-      categories: [],
-    },
-    series: [
-      {
-        name: "",
-        data: [],
-      },
-    ],
+    labels: { categories: [] },
+    series: [{ name: '', data: [] }],
   });
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/sales/success-by-seller`)
-        .then(response => {
-      const data = response.data as SaleSuccess[];
-      const myLabels = data.map((x) => x.sellerName);
-      const mySeries = data.map((x) => round((100.0 * x.deals) / x.visited, 1));
-
-      setChartData({
-        labels: {
-          categories: myLabels,
-        },
-        series: [
-          {
-            name: "% Success",
-            data: mySeries,
-          },
-        ],
-      });
-    });
+    api.get<SaleSuccess[]>('/sales/success-by-seller')
+      .then(data => {
+        setChartData({
+          labels: { categories: data.map(x => x.sellerName) },
+          series: [{ name: '% Sucesso', data: data.map(x => round((100.0 * x.deals) / x.visited, 1)) }],
+        });
+      })
+      .catch(() => setError('Não foi possível carregar os dados.'));
   }, []);
 
-  const options = {
-    plotOptions: {
-      bar: {
-        horizontal: true,
-      },
-    },
-  };
+  if (error) return <p className="text-danger text-center">{error}</p>;
 
   return (
     <Chart
-      options={{ ...options, xaxis: chartData.labels }}
+      options={{ plotOptions: { bar: { horizontal: true } }, xaxis: chartData.labels }}
       series={chartData.series}
       type="bar"
       height="240"
