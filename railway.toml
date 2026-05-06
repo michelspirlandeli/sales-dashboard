@@ -1,7 +1,2 @@
 [build]
-builder = "nixpacks"
-buildCommand = "cd backend && chmod +x mvnw && ./mvnw clean package -DskipTests"
-
-[deploy]
-startCommand = "java -jar backend/target/*.jar"
-restartPolicyType = "on_failure"
+dockerfilePath = "backend/Dockerfile"
