@@ -1,8 +1,8 @@
 FROM maven:3.8.5-openjdk-11-slim AS build
 WORKDIR /app
-COPY pom.xml .
+COPY backend/pom.xml .
 RUN mvn dependency:go-offline -B
-COPY src ./src
+COPY backend/src ./src
 RUN mvn clean package -DskipTests -B
 
 FROM eclipse-temurin:11-jre-alpine
