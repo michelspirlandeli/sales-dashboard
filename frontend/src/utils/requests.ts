@@ -22,11 +22,15 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
         throw new Error(message);
     }
 
+    if (response.status === 204) return undefined as unknown as T;
     return response.json() as Promise<T>;
 }
 
 export const api = {
     get: <T>(path: string) => request<T>(path),
+    post: <T>(path: string, body: unknown) => request<T>(path, { method: 'POST', body: JSON.stringify(body) }),
+    put: <T>(path: string, body: unknown) => request<T>(path, { method: 'PUT', body: JSON.stringify(body) }),
+    delete: (path: string) => request<void>(path, { method: 'DELETE' }),
 };
 
 export default api;

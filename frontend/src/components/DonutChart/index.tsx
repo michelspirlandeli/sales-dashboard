@@ -3,12 +3,16 @@ import Chart from 'react-apexcharts';
 import { SaleSum } from 'types/sale';
 import api from 'utils/requests';
 
+type Props = {
+  refreshKey: number;
+};
+
 type CharData = {
   labels: string[];
   series: number[];
 };
 
-const DonutChart = () => {
+const DonutChart = ({ refreshKey }: Props) => {
   const [chartData, setChartData] = useState<CharData>({ labels: [], series: [] });
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +25,7 @@ const DonutChart = () => {
         });
       })
       .catch(() => setError('Não foi possível carregar os dados.'));
-  }, []);
+  }, [refreshKey]);
 
   if (error) return <p className="text-danger text-center">{error}</p>;
 

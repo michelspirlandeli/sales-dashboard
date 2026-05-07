@@ -9,6 +9,14 @@ export type Sale = {
   seller: Seller;
 }
 
+export type SaleForm = {
+  sellerId: number;
+  visited: number;
+  deals: number;
+  amount: number;
+  date: string;
+}
+
 export type SalePage = {
   content?: Sale[];
   last: boolean;

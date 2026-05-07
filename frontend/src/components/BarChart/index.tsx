@@ -4,6 +4,10 @@ import { SaleSuccess } from 'types/sale';
 import { round } from 'utils/format';
 import api from 'utils/requests';
 
+type Props = {
+  refreshKey: number;
+};
+
 type SeriesData = {
   name: string;
   data: number[];
@@ -14,7 +18,7 @@ type CharData = {
   series: SeriesData[];
 };
 
-const BarChart = () => {
+const BarChart = ({ refreshKey }: Props) => {
   const [chartData, setChartData] = useState<CharData>({
     labels: { categories: [] },
     series: [{ name: '', data: [] }],
@@ -30,7 +34,7 @@ const BarChart = () => {
         });
       })
       .catch(() => setError('Não foi possível carregar os dados.'));
-  }, []);
+  }, [refreshKey]);
 
   if (error) return <p className="text-danger text-center">{error}</p>;
 
