@@ -5,3 +5,4 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  REACT_APP_BACKEND_URL = "https://project-semana-dev-superior-3-production.up.railway.app"
